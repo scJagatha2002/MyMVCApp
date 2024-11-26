@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home Page</title>
+    <style>
+        table {
+            width: 50%;
+            margin: 20px auto;
+            border-collapse: collapse;
+        }
+
+        th,
+        td {
+            padding: 8px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Body styling */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Header Styling */
+        header {
+            background-color: #4CAF50;
+            /* Green background */
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 4px 2px -2px gray;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+        }
+
+        nav ul li {
+            margin-left: 20px;
+        }
+
+        nav ul li a {
+            text-decoration: none;
+            color: white;
+            font-size: 18px;
+        }
+
+        nav ul li a:hover {
+            color: #ddd;
+        }
+
+        /* Footer Styling */
+        footer {
+            background-color: #333;
+            color: white;
+            text-align: center;
+            padding: 10px 0;
+            position: relative;
+            bottom: 0;
+            width: 100%;
+        }
+
+        .footer-container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .footer-container a {
+            color: #4CAF50;
+            text-decoration: none;
+        }
+
+        .footer-container a:hover {
+            text-decoration: underline;
+        }
+    </style>
+</head>
+
+<body>
+    <%- include('partials/header') %>
+        <center>Welcome <%= name %>
+        </center>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>EID</th>
+                    <th>Employee Name</th>
+                    <th>Email</th>
+                    <th>Update</th>
+                    <th>Delete</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% employeeList.forEach(e=> { %>
+                    <tr id="employee-<%= e.eid %>">
+                        <td>
+                            <%= e.eid %>
+                        </td>
+                        <td>
+                            <%= e.ename %>
+                        </td>
+                        <td>
+                            <%= e.email %>
+                        </td>
+                        <td><a href="http://localhost:1234/updateEmployee/<%= e.eid %>">Update</a></td>
+                        <td><a href="#" onclick="deleteEmployee('<%= e.eid %>')">Delete</a></td>
+                    </tr>
+                    <% }); %>
+            </tbody>
+        </table>
+        <%- include('partials/footer') %>
+</body>
+
+<script>
+    function deleteEmployee(eid) {
+        console.log('Deleting employee with EID: ' + eid);
+        fetch(`http://localhost:1234/api/v1/employee/home/${eid}`, {
+            method: 'DELETE',
+        })
+            .then(response => {
+                if (response.ok) {
+                    alert('Employee deleted successfully');
+                    // Remove the deleted employee's row from the table
+                    document.getElementById(`employee-${eid}`).remove();
+                } else {
+                    alert('Failed to delete employee');
+                }
+            })
+            .catch(error => {
+                alert('Error: ' + error);
+            });
+    }
+</script>
+
+</html>

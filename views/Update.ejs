@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Update Page</title>
+</head>
+<body>
+    <h2>Update Employee</h2>
+    <form id="updateForm">
+        <label for="name">Name:</label><br>
+        <input type="text" id="name" name="name"><br><br>
+
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email"><br><br>
+
+        <button type="submit">Submit</button>
+    </form>
+
+    <script>
+        // Get the form element
+        const form = document.getElementById('updateForm');
+        const id = '<%= id %>';  // The ID is passed from the server
+
+        form.addEventListener('submit', async function (event) {
+            event.preventDefault();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+
+            try {
+                const response = await fetch(`/api/v1/employee/home/${id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ename: name,
+                        email: email
+                    })
+                });
+
+                const data = await response.json();
+                if (response.ok) {
+                    alert('Employee updated successfully');
+                    window.location.href = 'http://localhost:1234/showEmployees';
+                } else {
+                    alert('Error updating employee: ' + data.message);
+                }
+            } catch (error) {
+                alert('An error occurred: ' + error.message);
+            }
+        });
+    </script>
+</body>
+</html>
